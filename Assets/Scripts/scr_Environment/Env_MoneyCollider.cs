@@ -6,6 +6,7 @@ public class Env_MoneyCollider : MonoBehaviour
 {
     [SerializeField] private int money;
     [SerializeField] private float spinSpeed;
+    [SerializeField] private UI_PauseMenu PauseMenuScript;
 
     private void Update()
     {
@@ -24,7 +25,8 @@ public class Env_MoneyCollider : MonoBehaviour
 
             Debug.Log("Player picked up " + money + " money!");
 
-            Destroy(gameObject);
+            PauseMenuScript.disabledGameobjects.Add(gameObject);
+            gameObject.SetActive(false);
         }
     }
 }

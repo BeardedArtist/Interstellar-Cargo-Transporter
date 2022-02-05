@@ -38,13 +38,6 @@ public class CollisionHandler : MonoBehaviour
         {
             collisionDisabled = !collisionDisabled; // toggle collision
         }
-
-        else if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            // SceneManager.LoadScene("Start Menu");
-            // This will load us back into the start menu (TODO)
-            Debug.Log("Load Start Menu...");
-        }
     }
 
     private void OnCollisionEnter(Collision other) 
