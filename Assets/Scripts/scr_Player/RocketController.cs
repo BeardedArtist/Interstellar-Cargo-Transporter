@@ -7,6 +7,9 @@ public class RocketController : MonoBehaviour
     // Variables for movement speeds
     [SerializeField] float MainThruster = 1000f;
     [SerializeField] float RotateThruster = 160f;
+    [SerializeField] private int mainThrusterfuel = 1000;
+    [SerializeField] private int leftThrusterfuel = 1000;
+    [SerializeField] private int rightThrusterfuel = 1000;
 
     // Varibles for audio clips (LATER)
 
@@ -14,11 +17,24 @@ public class RocketController : MonoBehaviour
 
     // Varibles for caching
     Rigidbody rb;
+    Player_Stats player_Stats;
+    RocketController rocketController;
 
     // Start is called before the first frame update
     void Start()
     {
         rb = GetComponent<Rigidbody>();
+        player_Stats = GetComponent<Player_Stats>();
+        rocketController = GetComponent<RocketController>();
+
+        player_Stats.mainThrusterfuel = mainThrusterfuel;
+        player_Stats.txt_MainThrusterFuel.text = player_Stats.mainThrusterfuel.ToString();
+
+        player_Stats.leftThrusterfuel = leftThrusterfuel;
+        player_Stats.txt_LeftThrusterFuel.text = player_Stats.leftThrusterfuel.ToString();
+
+        player_Stats.rightThrusterfuel = rightThrusterfuel;
+        player_Stats.txt_RightThrusterFuel.text = player_Stats.rightThrusterfuel.ToString();
     }
 
     private void FixedUpdate() 
@@ -33,6 +49,16 @@ public class RocketController : MonoBehaviour
         if (Input.GetKey(KeyCode.Space))
         {
             StartBoosting();
+
+            if (mainThrusterfuel >= 1)
+            {
+                DepleteMainThrustFuel();
+            }
+            else
+            {
+                player_Stats.txt_MainThrusterFuel.text = "NO FUEL!";
+                StopBoosting();
+            }
         }
         
         else if (!Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.D))
@@ -45,12 +71,28 @@ public class RocketController : MonoBehaviour
     {
         if (Input.GetKey(KeyCode.A))
         {
-            RotateLeft();
+            if (leftThrusterfuel >= 1)
+            {
+                RotateLeft();
+                DepleteLeftThrustFuel();
+            }
+            else
+            {
+                player_Stats.txt_LeftThrusterFuel.text = "NO FUEL";
+            }
         }
 
         else if (Input.GetKey(KeyCode.D))
         {
-            RotateRight();
+            if (rightThrusterfuel >= 1)
+            {
+                RotateRight();
+                DepleteRightThrustFuel();
+            }
+            else
+            {
+                player_Stats.txt_RightThrusterFuel.text = "NO FUEL";
+            }
         }
 
         else if (Input.GetKey(KeyCode.W))
@@ -121,6 +163,25 @@ public class RocketController : MonoBehaviour
         rb.freezeRotation = true;
         transform.Rotate(Vector3.left * rotationThisFrame * Time.deltaTime);
         rb.freezeRotation = false;
+    }
+
+    void DepleteMainThrustFuel()
+    {
+
+        player_Stats.mainThrusterfuel = mainThrusterfuel--;
+        player_Stats.txt_MainThrusterFuel.text = player_Stats.mainThrusterfuel.ToString();
+    }
+
+    void DepleteLeftThrustFuel()
+    {
+        player_Stats.leftThrusterfuel = leftThrusterfuel--;
+        player_Stats.txt_LeftThrusterFuel.text = player_Stats.leftThrusterfuel.ToString();
+    }
+
+    void DepleteRightThrustFuel()
+    {
+        player_Stats.rightThrusterfuel = rightThrusterfuel--;
+        player_Stats.txt_RightThrusterFuel.text = player_Stats.rightThrusterfuel.ToString();
     }
 
 }

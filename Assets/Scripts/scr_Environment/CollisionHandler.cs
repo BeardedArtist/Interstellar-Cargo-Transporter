@@ -6,15 +6,23 @@ using UnityEngine.SceneManagement;
 public class CollisionHandler : MonoBehaviour
 {
     [SerializeField] float delay = 2.8f;
+    [SerializeField] int lives = 5;
     
     RocketController rocketController;
     bool isTransitioning = false; // This bool will be used to help set up logic that won't allow for other methods to play if one is activated.
     bool collisionDisabled = false;
 
+    // Caching
+    Player_Stats player_Stats;
+
     // Start is called before the first frame update
     void Start()
     {
-        rocketController = GetComponent<RocketController>();        
+        rocketController = GetComponent<RocketController>();
+        player_Stats = GetComponent<Player_Stats>();
+
+        player_Stats.lives = lives;
+        player_Stats.txt_Lives.text = player_Stats.lives.ToString();    
     }
 
     // Update is called once per frame
@@ -67,7 +75,15 @@ public class CollisionHandler : MonoBehaviour
             
             // default refers to the rest of the objects with no tags that will result in damage to the player
             default:
-                StartCrashSequence();
+                if (lives > 0)
+                {
+                    StartCoroutine(loseLives());
+                }
+                else if (lives == 0)
+                {
+                    player_Stats.txt_Lives.text = "ABORT MISSION!";
+                    StartCrashSequence();
+                }
                 break;
         }
     }
@@ -116,5 +132,18 @@ public class CollisionHandler : MonoBehaviour
             nextLevelIndex = 0;
         }
         SceneManager.LoadScene(nextLevelIndex);
+    }
+
+    // void loseLives()
+    // {
+    //     player_Stats.lives = lives--;
+    //     player_Stats.txt_Lives.text = player_Stats.lives.ToString();
+    // }
+
+    IEnumerator loseLives()
+    {
+        player_Stats.lives = lives--;
+        player_Stats.txt_Lives.text = player_Stats.lives.ToString();
+        yield return new WaitForSeconds(2.0f);
     }
 }
