@@ -6,10 +6,14 @@ public class RocketController : MonoBehaviour
 {
     // Variables for movement speeds
     [SerializeField] float MainThruster = 1000f;
-    [SerializeField] float RotateThruster = 160f;
+    [SerializeField] float RotateThruster = 100f;
     [SerializeField] private int mainThrusterfuel = 1000;
     [SerializeField] private int leftThrusterfuel = 1000;
     [SerializeField] private int rightThrusterfuel = 1000;
+
+    // TEST
+    float degreesPerSecond = 100f;
+    // TEST
 
     // Varibles for audio clips (LATER)
 
@@ -95,6 +99,32 @@ public class RocketController : MonoBehaviour
             }
         }
 
+        else if (Input.GetKey(KeyCode.Q))
+        {
+            if (rightThrusterfuel >= 1)
+            {
+                ApplyRoll(degreesPerSecond);
+                DepleteLeftThrustFuel();
+            }
+            else
+            {
+                player_Stats.txt_LeftThrusterFuel.text = "NO FUEL";
+            }
+        }
+
+        else if (Input.GetKey(KeyCode.E))
+        {
+            if (rightThrusterfuel >= 1)
+            {
+                ApplyRoll(-degreesPerSecond);
+                DepleteRightThrustFuel();
+            }
+            else
+            {
+                player_Stats.txt_RightThrusterFuel.text = "NO FUEL";
+            }
+        }
+
         else if (Input.GetKey(KeyCode.W))
         {
             RotateForward();
@@ -150,6 +180,13 @@ public class RocketController : MonoBehaviour
     {
         // TODO: Stop particles and audio
     }
+
+    // TEST
+    void ApplyRoll(float degreesPerSecond)
+    {
+        transform.Rotate(new Vector3(0, degreesPerSecond, 0) * Time.deltaTime);
+    }
+    // TEST
 
     void ApplyRotation(float rotationThisFrame)
     {
